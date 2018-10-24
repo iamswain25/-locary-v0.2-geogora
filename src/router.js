@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import Home from './views/Home.vue'
+import Firebaseui from '@/components/Firebaseui'
 
 Vue.use(Router)
 
@@ -12,6 +13,10 @@ export default new Router({
       path: '/',
       name: 'home',
       component: Home
+    },
+    {
+      path: '/signin',
+      component: Firebaseui
     },
     {
       path: '/about',
