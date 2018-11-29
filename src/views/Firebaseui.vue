@@ -1,29 +1,30 @@
 <template>
   <div class="loginui">
-    <div id="firebaseui-auth-container"></div>
+    <div id="firebaseui-auth-container"/>
   </div>
 </template>
 
 <script>
 import { firebase } from "@/firestore";
 import firebaseui from "firebaseui";
-import "firebase/auth";
 export default {
   created() {
     const store = this.$store;
     firebase.auth().onAuthStateChanged(function(user) {
       if (user) {
-        store.dispatch("getUserRef", { authUser: user });
+        store.dispatch("login", { userAuth: user });
       } else {
         firebase
           .auth()
           .setPersistence(firebase.auth.Auth.Persistence.LOCAL)
           .then(function() {
-            const ui = new firebaseui.auth.AuthUI(firebase.auth());
+            let ui = firebaseui.auth.AuthUI.getInstance();
+            if (!ui) {
+              ui = new firebaseui.auth.AuthUI(firebase.auth());
+            }
             const uiConfig = {
               callbacks: {
                 signInSuccessWithAuthResult: function(authResult, redirectUrl) {
-                  ui.delete();
                   return false;
                 }
               },
@@ -45,7 +46,8 @@ export default {
   }
 };
 </script>
-<style src="firebaseui/dist/firebaseui.css"></style>
+<style src="firebaseui/dist/firebaseui.css">
+</style>
 <style scoped>
 .loginui {
   text-align: center;
